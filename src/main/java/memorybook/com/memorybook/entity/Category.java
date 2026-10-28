@@ -4,30 +4,28 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
-@Table (name ="Category" )
+@Table(name = "category")
 public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private long id;
+    private Long id;
 
     @Column(name = "name")
     private String name;
 
-    //@Column(name = "Thriller")
-    //private String thriller;
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private AppUser owner;
 
-    //@Column(name = "Horror")
-    //private String horror;
-
-    //@Column(name = "Fantasy")
-    //private String fantasy;
-
-    //@Column(name = "Romance")
-    //private String romance;
-
+    // Gegenseite von Book.categories
+    @ManyToMany(mappedBy = "categories")
+    private Set<Book> books = new HashSet<>();
 }

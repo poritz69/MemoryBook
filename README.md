@@ -1,16 +1,28 @@
 # MemoryBook
 
-Spring-Boot-Webanwendung zum Verwalten von Büchern, Kategorien und Notizen.
-
-## Voraussetzungen
-
-- Java 25 (mit Java 27 läuft Lombok noch nicht)
-- PostgreSQL auf `localhost:5432`, Benutzer `postgres` (siehe `src/main/resources/application.properties`)
+Webanwendung mit Spring Boot, Thymeleaf und PostgreSQL. Man kann Bücher mit Status, Fortschritt und Bewertung
+verwalten, Kategorien anlegen und Notizen zu Büchern schreiben. Jeder Benutzer sieht nur seine eigenen Daten.
 
 ## Starten
+
+Voraussetzungen: Java 25 und PostgreSQL auf `localhost:5432` (Benutzer `postgres`).
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-Danach im Browser `http://localhost:8085/users` öffnen, einen Benutzer registrieren und einloggen.
+Danach `http://localhost:8085` öffnen und unter „Hier registrieren“ ein Konto anlegen.
+
+Mit Testdaten (Benutzer `demo`, Passwort `demo1234`):
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=demo
+```
+
+## Tests
+
+```bash
+./mvnw test
+```
+
+Die Tests benutzen eine H2-Datenbank im Speicher.

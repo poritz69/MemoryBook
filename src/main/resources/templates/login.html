@@ -7,32 +7,33 @@
 </head>
 <body class="bg-light">
 
-<main class="container mt-5" style="max-width: 420px">
+<div class="container mt-5" style="max-width: 420px">
+  <h2 class="text-center mb-4">MemoryBook</h2>
 
   <div th:if="${param.error}" class="alert alert-danger">Benutzername oder Passwort falsch.</div>
   <div th:if="${param.logout}" class="alert alert-success">Du wurdest abgemeldet.</div>
+  <div th:if="${param.registered}" class="alert alert-success">Konto angelegt, du kannst dich jetzt einloggen.</div>
+  <div th:if="${param.deleted}" class="alert alert-info">Dein Konto wurde gelöscht.</div>
 
-  <h2 class="text-center mb-4">Einloggen</h2>
-  <!-- th:action fügt das CSRF-Token automatisch ein -->
-  <form th:action="@{/login}" method="post">
-    <div class="mb-3">
-      <label for="username" class="form-label">Name</label>
-      <input type="text" id="username" name="username" class="form-control" required>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h4 class="card-title mb-3">Einloggen</h4>
+      <form th:action="@{/login}" method="post">
+        <div class="mb-3">
+          <label class="form-label">Name</label>
+          <input type="text" name="username" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Passwort</label>
+          <input type="password" name="password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Log in</button>
+      </form>
     </div>
-    <div class="mb-3">
-      <label for="password" class="form-label">Passwort</label>
-      <input type="password" id="password" name="password" class="form-control" required>
-    </div>
-    <button type="submit" class="btn btn-primary w-100">Log in</button>
-  </form>
+  </div>
 
-  <hr class="my-4">
+  <p class="text-center mt-3">Noch kein Konto? <a href="/users">Hier registrieren</a></p>
+</div>
 
-  <p class="text-center">Noch kein Konto? <a th:href="@{/users}">Hier registrieren</a></p>
-
-  <footer class="text-center text-muted mt-5">
-    <p>MemoryBook Save instead of Forgetting</p>
-  </footer>
-</main>
 </body>
 </html>

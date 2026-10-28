@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>MemoryBook - Booklist</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+<nav th:replace="~{fragments :: nav}"></nav>
+
+<div class="container">
+  <div th:replace="~{fragments :: messages}"></div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <h2>Alle Bücher <small class="text-muted" th:text="'(' + ${books.totalElements} + ')'"></small></h2>
+    </div>
+    <div class="col-md-6 text-end">
+      <a href="/books/export" class="btn btn-outline-secondary">CSV-Export</a>
+      <a href="/books/add" class="btn btn-primary">+ Neues Buch hinzufügen</a>
+    </div>
+  </div>
+
+  <!-- Suche und Filter -->
+  <form action="/books" method="get" class="card card-body shadow-sm mb-4">
+    <div class="row g-2 align-items-end">
+      <div class="col-md-3">
+        <label class="form-label">Suche</label>
+        <input type="text" name="q" class="form-control" th:value="${q}" placeholder="Titel oder Autor">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Status</label>
+        <select name="status" class="form-select">
+          <option value="">Alle</option>
+          <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}" th:selected="${s == status}"></option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Kategorie</label>
+        <select name="categoryId" class="form-select">
+          <option value="">Alle</option>
+          <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}" th:selected="${c.id == categoryId}"></option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Sortieren</label>
+        <select name="sort" class="form-select">
+          <option value="title" th:selected="${sort == 'title'}">Titel</option>
+          <option value="author" th:selected="${sort == 'author'}">Autor</option>
+          <option value="rating" th:selected="${sort == 'rating'}">Bewertung</option>
+          <option value="newest" th:selected="${sort == 'newest'}">Neueste</option>
+        </select>
+      </div>
+      <div class="col-md-1">
+        <div class="form-check mb-2">
+          <input type="checkbox" name="favorite" value="true" class="form-check-input" id="favorite" th:checked="${favorite}">
+          <label class="form-check-label" for="favorite">Favoriten</label>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-dark w-100">Filtern</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <table class="table table-striped align-middle">
+        <thead>
+        <tr>
+          <th></th>
+          <th>Titel</th>
+          <th>Autor</th>
+          <th>Status</th>
+          <th>Bewertung</th>
+          <th>Fortschritt</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Schleife über die Bücher-Liste aus dem BookController -->
+        <tr th:each="book : ${books.content}">
+          <td style="width: 50px">
+            <img th:if="${book.coverUrl != null}" th:src="${book.coverUrl}" alt="" height="60" onerror="this.remove()">
+          </td>
+          <td>
+            <a th:href="@{/books/{id}(id=${book.id})}" th:text="${book.title}">Buchtitel</a>
+            <span th:if="${book.favorite}" class="text-warning">★</span>
+          </td>
+          <td th:text="${book.author}">Autor</td>
+          <td><span th:if="${book.status != null}" class="badge" th:classappend="'bg-' + ${book.status.color}"
+                    th:text="${book.status.label}">Status</span></td>
+          <td class="text-warning" th:text="${book.rating != null} ? ${#strings.repeat('★', book.rating)} : ''"></td>
+          <td style="width: 150px">
+            <div class="progress">
+              <div class="progress-bar" th:style="'width:' + ${book.progressPercent} + '%'"></div>
+            </div>
+          </td>
+        </tr>
+        <tr th:if="${books.empty}">
+          <td colspan="6" class="text-center text-muted">Keine Bücher gefunden. Füge dein erstes hinzu!</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <!-- Seiten -->
+      <nav th:if="${books.totalPages > 1}">
+        <ul class="pagination justify-content-center mb-0">
+          <li class="page-item" th:each="i : ${#numbers.sequence(0, books.totalPages - 1)}"
+              th:classappend="${i == books.number} ? 'active'">
+            <a class="page-link" th:text="${i + 1}"
+               th:href="@{/books(q=${q}, status=${status}, categoryId=${categoryId}, favorite=${favorite}, sort=${sort}, page=${i})}">1</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
