@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Kategorien - MemoryBook</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="/">MemoryBook</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/books">Books</a></li>
+        <li class="nav-item"><a class="nav-link" href="/categories">Categories</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/profile">Profil</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h4 class="card-title mb-3">Neue Kategorie</h4>
+
+          <form th:action="@{/save/category-list}" method="post">
+            <div class="mb-3">
+              <label for="name" class="form-label">Kategoriename</label>
+              <input type="text" id="name" name="name" class="form-control" required placeholder="z. B. Roman, Sci-Fi...">
+            </div>
+            <button type="submit" class="btn btn-success w-100">Kategorie speichern</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h4 class="card-title mb-3">Vorhandene Kategorien</h4>
+          <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th class="text-end">Aktion</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="category : ${categories}">
+              <td th:text="${category.id}">1</td>
+              <td>
+
+                <a th:href="@{/categories/{id}(id=${category.id})}" th:text="${category.name}" class="text-decoration-none fw-bold">Name</a>
+              </td>
+              <td class="text-end">
+                <a th:href="@{/categories/{id}(id=${category.id})}" class="btn btn-sm btn-outline-primary">Anzeigen</a>
+              </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(categories)}">
+              <td colspan="3" class="text-center text-muted py-4">Noch keine Kategorien vorhanden.</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <a href="/" class="btn btn-secondary">Zurück zur Startseite</a>
+  </div>
+</div>
+
+</body>
+</html>
